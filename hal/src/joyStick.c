@@ -32,7 +32,7 @@ void runCommand(char* command)
 }
 
 //configure pin to GPIO
-void configPin(){
+void configPinGPIO(){
 runCommand("config-pin p8.14 gpio");
 runCommand("config-pin p8.15 gpio");
 runCommand("config-pin p8.16 gpio");
@@ -74,8 +74,10 @@ int isJoystickPressed(){
         return 1;
     }else if(joystickPressed(STICK_DOWN)){
         return 2;
-    }else if(joystickPressed(STICK_LEFT)||joystickPressed(STICK_RIGHT)){
+    }else if(joystickPressed(STICK_LEFT)){
         return 3;
+    }else if(joystickPressed(STICK_RIGHT)){
+        return 4;
     }else{
         return 0;
     }

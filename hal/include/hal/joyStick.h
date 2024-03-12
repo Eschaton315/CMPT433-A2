@@ -4,7 +4,7 @@
 
 void runCommand(char* command);
 
-void configPin();
+void configPinGPIO();
 
 bool joystickPressed(char *path);
 
