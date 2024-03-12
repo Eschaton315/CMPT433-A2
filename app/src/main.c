@@ -1,11 +1,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include <pthread.h>
 
 #include "hal/joyStick.h"
-#include "hal/wavePlayer.h" 
+#include "hal/wavePlayer.h"
+#include "timer.h" 
 
 #define BASE_BPM 120
+
 
 int main(){
     char* path = "wave-files/100067__menegass__gui-drum-tom-mid-soft.wav";
@@ -17,39 +20,44 @@ int main(){
     }
 
     //config joytick
-    configPinGPIO();
+    //configPinGPIO();
+    joystick_init();
     configPinI2C();
+   
 
-    while(isJoystickPressed()!=5){
-        if(isJoystickPressed() == 1){
+    while(getJoystickValue()!=5){
+        //printf("button is %d\n",getJoystickValue());
+        if(getJoystickValue() == 1){
             active = true;
-            path = "wave-files/100056__menegass__gui-drum-cyn-hard.wav";
+            path = "wave-files/100051__menegass__gui-drum-bd-hard.wav";
         }
-        if(isJoystickPressed() == 2){
+        if(getJoystickValue() == 2){
             active = true;
-            path = "wave-files/100058__menegass__gui-drum-snare-hard.wav";
+            path = "wave-files/100053__menegass__gui-drum-cc.wav";
         }
-        if(isJoystickPressed() == 3){
+        if(getJoystickValue() == 3){
             active = true;
-            path = "wave-files/100067__menegass__gui-drum-tom-mid-soft.wav";
+            path = "wave-files/100059__menegass__gui-drum-snare-soft.wav";
         }
-        if(isJoystickPressed() == 4){
+        if(getJoystickValue() == 4){
             active = true;
             path = "wave-files/100063__menegass__gui-drum-tom-hi-soft.wav";
         }
 
-        if(isJoystickPressed() == 5){
+        if(getJoystickValue() == 5){
             break;
         }
         
-        if(active&&isJoystickPressed()!=0){
+        if(active&&getJoystickValue()!=0){
             //play audio
             wavePlayer_play(path);
         }
-
+        //sleepForMs(1000);
         
     
     }
+
+    joystickListener_cleanup();
 
     printf("EXITING\n");
 
