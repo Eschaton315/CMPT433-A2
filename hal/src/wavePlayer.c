@@ -31,7 +31,7 @@ void Audio_readWaveFileIntoMemory(char *fileName, wavedata_t *pWaveStruct);
 void Audio_playFile(snd_pcm_t *handle, wavedata_t *pWaveData);
 
 //runCommand function taken from assignment page
-void runCommand(char* command)
+static void runCommand(char* command)
 {
     // Execute the shell command (output into pipe)
     FILE *pipe = popen(command, "r");

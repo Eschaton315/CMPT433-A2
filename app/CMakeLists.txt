@@ -6,7 +6,7 @@ add_executable(beatbox ${MY_SOURCES})
 
 #Use the HAL library and ALSA support
 find_package(ALSA REQUIRED)
-target_link_libraries(beatbox LINK_PRIVATE hal asound)
+target_link_libraries(beatbox LINK_PRIVATE hal asound pthread)
 
 #create remote location
 

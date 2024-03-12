@@ -7,10 +7,11 @@
 #define STICK_DOWN "/sys/class/gpio/gpio46/value"
 #define STICK_LEFT "/sys/class/gpio/gpio65/value"
 #define STICK_RIGHT "/sys/class/gpio/gpio47/value"
+#define STICK_IN "/sys/class/gpio/gpio27/value"
 
 
 //runCommand function taken from assignment page
-void runCommand(char* command)
+static void runCommand(char* command)
 {
     // Execute the shell command (output into pipe)
     FILE *pipe = popen(command, "r");
@@ -37,6 +38,7 @@ runCommand("config-pin p8.14 gpio");
 runCommand("config-pin p8.15 gpio");
 runCommand("config-pin p8.16 gpio");
 runCommand("config-pin p8.18 gpio");
+runCommand("config-pin p8.17 gpio");
 }
 
 //Boolean of whether a joystick of designated path is pressed
@@ -70,7 +72,9 @@ if(value==0){
 //returns which direction the joystick is pressed
 
 int isJoystickPressed(){
-    if(joystickPressed(STICK_UP)){
+    if(joystickPressed(STICK_IN)){
+        return 5;
+    }else if(joystickPressed(STICK_UP)){
         return 1;
     }else if(joystickPressed(STICK_DOWN)){
         return 2;
