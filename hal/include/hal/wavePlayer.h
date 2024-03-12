@@ -4,6 +4,6 @@
 
 void configPinI2C();
 
-void wavePlayer_play(char* path);
+void wavePlayer_play(char* path, float volume);
 
 #endif

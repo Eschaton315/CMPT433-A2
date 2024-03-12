@@ -28,6 +28,7 @@ typedef struct
 // Prototypes:
 snd_pcm_t *Audio_openDevice();
 void Audio_readWaveFileIntoMemory(char *fileName, wavedata_t *pWaveStruct);
+void Audio_setVolume(wavedata_t *sampleData, float volume);
 void Audio_playFile(snd_pcm_t *handle, wavedata_t *pWaveData);
 
 //runCommand function taken from assignment page
@@ -58,16 +59,21 @@ runCommand("config-pin p9_18 i2c");
 runCommand("config-pin p9_17 i2c");
 }
 
-void wavePlayer_play(char* path)
+void wavePlayer_play(char* path, float volume)
 {
 	printf("Beginning play-back of %s\n", path);
+
 
 	// Configure Output Device
 	snd_pcm_t *handle = Audio_openDevice();
 
+
 	// Load wave file we want to play:
 	wavedata_t sampleFile;
 	Audio_readWaveFileIntoMemory(path, &sampleFile);
+
+	// Set Volume
+	Audio_setVolume(&sampleFile,volume);
 
 	// Play Audio
 	Audio_playFile(handle, &sampleFile);
@@ -157,12 +163,21 @@ void Audio_readWaveFileIntoMemory(char *fileName, wavedata_t *pWaveStruct)
 	fclose(file);
 }
 
+// Set the volume of the file
+void Audio_setVolume(wavedata_t *sampleData, float volume){
+	for(int i = 0; i < sampleData->numSamples; i++){
+		sampleData->pData[i] = (short)((float)sampleData->pData[i] * volume);
+	}
+}
+
+
+
 // Play the audio file (blocking)
 void Audio_playFile(snd_pcm_t *handle, wavedata_t *pWaveData)
 {
 	// If anything is waiting to be written to screen, can be delayed unless flushed.
 	fflush(stdout);
-	printf("PLAYING\n");
+	//printf("PLAYING\n");
 	// Write data and play sound (blocking)
 	snd_pcm_sframes_t frames = snd_pcm_writei(handle, pWaveData->pData, pWaveData->numSamples);
 

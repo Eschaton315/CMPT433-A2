@@ -4,8 +4,14 @@
 
 void configPinGPIO();
 
+void joystick_init();
+
 bool joystickPressed(char *path);
 
-int isJoystickPressed();
+void setJoystickValue();
+
+void joystickListener_cleanup();
+
+int getJoystickValue();
 
 #endif
