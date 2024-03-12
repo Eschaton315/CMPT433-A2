@@ -33,16 +33,16 @@ int main(){
                 volume = volume+0.05;
                 printf("Volume set to %0.0f\n",volume*100);
             }else{
-                printf("Already at Max Volume");
+                printf("Already at Max Volume\n");
             }
             sleepForMs(300);
         }
         if(getJoystickValue() == 2){
             if(volume>0){
                 volume = volume-0.05;
-                printf("Volume set to %0.0f\n",volume*100);
+                printf("Volume set to %0.0f\n",(volume*(100))+0.01);
             }else{
-                printf("Already at Min Volume");
+                printf("Already at Min Volume\n");
             }
             sleepForMs(300);
             
