@@ -133,7 +133,7 @@ void joystickListener_cleanup(){
 
 
 //returns which direction the joystick is pressed
-int getJoystickValue(){
+int joystick_getJoystickValue(){
     return joystickValue;
 }
 

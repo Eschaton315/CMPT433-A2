@@ -12,6 +12,6 @@ void setJoystickValue();
 
 void joystickListener_cleanup();
 
-int getJoystickValue();
+int joystick_getJoystickValue();
 
 #endif
