@@ -14,16 +14,15 @@
 #define REPLY_MAX_SIZE 1500
 #define RECEIVED_MAX_SIZE 1024
 
+
 //Commands defined
 //1 = Silence, 2 = Rock, 3 = Custom Beat, 4 = Increase Volume
 //5 = Decrease Volume, 6 = Increase Tempo, 7 = Decrease Tempo, 8 = Stop
 #define COM_SILENCE "silence"
 #define COM_ROCK "rock"
 #define COM_CUSTOMBEAT "custombeat"
-#define COM_INCREASEVOL "incvol"
-#define COM_DECREASEVOL "decvol"
-#define COM_INCREASETEMPO "inctempo"
-#define COM_DECREASETEMPO "decreasetempo"
+#define COM_CHANGEVOL "changevol"
+#define COM_CHANGETEMPO "changetempo"
 #define COM_STOP "stop"
 
 
@@ -31,6 +30,8 @@ static pthread_t udpThread;
 static char reply[REPLY_MAX_SIZE];
 static char msgPrev[RECEIVED_MAX_SIZE];
 static bool firstCom = true;
+static char unitBuffer[REPLY_MAX_SIZE];
+
 
 //Function for listening to UDP packets
 static void* UDPListen();
@@ -40,8 +41,8 @@ static void* UDPListen();
 static void RunCommand(char* command);
 
 //Checks and find which command was sent
-//1 = Help / ?, 2 = count, 3 = len, 4 = dips
-//5 = history, 6 = stop, 7 = repeat
+//1 = Silence, 2 = Rock, 3 = Custom Beat, 4 = Change Volume
+//5 = Change Tempo, 6 = Stop
 static int CheckCommand(char* command);
 
 
@@ -114,8 +115,8 @@ static void *UDPListen(){
 }
 
 //Checking message to see what command was sent
-//1 = Silence, 2 = Rock, 3 = Custom Beat, 4 = Increase Volume
-//5 = Decrease Volume, 6 = Increase Tempo, 7 = Decrease Tempo, 8 = Stop
+//1 = Silence, 2 = Rock, 3 = Custom Beat, 4 = Change Volume
+//5 = Change Tempo, 6 = Stop
 static int CheckCommand(char* command){
 	
 	
@@ -132,24 +133,16 @@ static int CheckCommand(char* command){
 		return 3;
 	}
 	
-	if(strncmp(command, COM_INCREASEVOL, strlen(COM_INCREASEVOL)) == 0){
+	if(strncmp(command, COM_CHANGEVOL, strlen(COM_CHANGEVOL)) == 0){
 		return 4;
 	}
 	
-	if(strncmp(command, COM_DECREASEVOL, strlen(COM_DECREASEVOL)) == 0){
+	if(strncmp(command, COM_CHANGETEMPO, strlen(COM_CHANGETEMPO)) == 0){
 		return 5;
-	}
+	}	
 	
-	if(strncmp(command, COM_INCREASETEMPO, strlen(COM_INCREASETEMPO)) == 0){
-		return 6;
-	}
-	
-	if(strncmp(command, COM_DECREASETEMPO, strlen(COM_DECREASETEMPO)) == 0){
-		return 7;
-	}
-		
 	if(strncmp(command, COM_STOP, strlen(COM_STOP)) == 0){
-		return 8;
+		return 6;
 	}	
 	//if none of the strings are equal, then it is invalid
 	return -1;
@@ -178,30 +171,27 @@ static void RunCommand(char* command){
 			
 			break;
 			
-		//Increase Volume
+		//Change Volume
 		case 4: ;
-
+			
+			strncpy(unitBuffer, command + (strlen(COM_CHANGEVOL) - 1), 3);
+			
+			//run atof() to convert unitBuffer to volume and use
+			
+			
 			break;
 			
-		//Decrease Volume
+		//Change Tempo
 		case 5: ;
-			i
+			
+			strncpy(unitBuffer, command + (strlen(COM_CHANGEVOL) - 1), 3);
+			
+			//run atoi() to convert unitBuffer to int and use
+			
 			break;
 			
-		//Increase Tempo
-		case 6:
-
-			break;
-			
-		//Decrease Tempo
-		case 7:
-		
-			
-			
-			break;	
-		
 		//STOP
-		case 8:
+		case 6:
 			changeTerminateStatus(true);
 			
 			break;
