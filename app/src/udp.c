@@ -16,8 +16,8 @@
 
 
 //Commands defined
-//1 = Silence, 2 = Rock, 3 = Custom Beat, 4 = Increase Volume
-//5 = Decrease Volume, 6 = Increase Tempo, 7 = Decrease Tempo, 8 = Stop
+//1 = Silence, 2 = Rock, 3 = Custom Beat, 4 = Change Volume
+//5 = Change Tempo, 6 = Stop
 #define COM_SILENCE "silence"
 #define COM_ROCK "rock"
 #define COM_CUSTOMBEAT "custombeat"
