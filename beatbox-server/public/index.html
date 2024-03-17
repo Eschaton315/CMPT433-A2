@@ -27,7 +27,7 @@
 				<p>
 					<input type="button" id="modeNone" value="None">
 					<input type="button" id="modeRock1" value="Rock #1">
-					<input type="button" id="modeRock2" value="Describe Your Beat here">
+					<input type="button" id="customBeat" value="Custom Beat">
 				</p>
 				<h3>Volume</h3>
 				<p>
@@ -35,6 +35,13 @@
 					<input type="text" id="volumeid" value="???" size="3" readonly="readonly">
 					<input type="button" id="volumeUp" value=" + ">
 					(0 - 100)
+				</p>
+				<h3>Tempo</h3>
+				<p>
+					<input type="button" id="tempoDown" value=" - ">
+					<input type="text" id="tempoid" value="???" size="3" readonly="readonly">
+					<input type="button" id="tempoUp" value=" + ">
+					(40 - 300)
 				</p>
 			</div>
 			
@@ -53,9 +60,9 @@
 	</div>
 </form>
 	
-	<script src="BeagleBone%20Beat-Box_files/socket.io.js" type="text/javascript"></script>
+	<script src="/socket.io/socket.io.js" type="text/javascript"></script>
 	<script src="http://code.jquery.com/jquery-1.11.1.min.js" type="text/javascript"></script>
 
-	<script src="BeagleBone%20Beat-Box_files/beatbox_ui.js" type="text/javascript"></script>
+	<script src="javascripts/udp_ui.js" type="text/javascript"></script>
 
 </body></html>

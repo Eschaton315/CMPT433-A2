@@ -23,6 +23,9 @@
 #define COM_CUSTOMBEAT "custombeat"
 #define COM_CHANGEVOL "changevol"
 #define COM_CHANGETEMPO "changetempo"
+#define COM_GETVOLUME "getvolume"
+#define COM_GETTEMPO "gettempo"
+#define COM_GETSTATUS "getstatus"
 #define COM_STOP "stop"
 
 
@@ -144,6 +147,19 @@ static int CheckCommand(char* command){
 	if(strncmp(command, COM_STOP, strlen(COM_STOP)) == 0){
 		return 6;
 	}	
+	
+	if(strncmp(command, COM_GETVOLUME, strlen(COM_GETVOLUME)) == 0){
+		return 7;
+	}
+	
+	if(strncmp(command, COM_GETTEMPO, strlen(COM_GETTEMPO)) == 0){
+		return 8;
+	}
+	
+	if(strncmp(command, COM_GETSTATUS, strlen(COM_GETSTATUS)) == 0){
+		return 9;
+	}
+	
 	//if none of the strings are equal, then it is invalid
 	return -1;
 }
@@ -195,6 +211,22 @@ static void RunCommand(char* command){
 			changeTerminateStatus(true);
 			
 			break;
+			
+		case 7:
+			//Grab volume var and place in the reply
+			
+			break;	
+			
+		case 8:
+			//Grab tempo var and place in the reply
+			
+			break;
+			
+		case 9:
+			//Grab status var and place in the reply
+			
+			break;
+		
 	}
 	
 	
