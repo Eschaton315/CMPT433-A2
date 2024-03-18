@@ -174,30 +174,29 @@ static int initI2cBus(char* bus, int address)
 //read the register
 static int readI2cReg(int i2cFileDesc, unsigned char regAddr)
 {
-	// To read a register, must first write the address
-	int res = write(i2cFileDesc, &regAddr, sizeof(regAddr));
-	if (res != sizeof(regAddr)) {
-		perror("Unable to write i2c register.");
-		exit(-1);
-	}
-	unsigned char buff[6];
-	// Now read the value and return it
-    res = read(i2cFileDesc, &buff, 6*sizeof(unsigned char));
+    // To read a register, must first write the address
+    int res = write(i2cFileDesc, &regAddr, sizeof(regAddr));
+    if (res != sizeof(regAddr)) {
+        perror("Unable to write i2c register.");
+        exit(-1);
+    }
+    unsigned char buff[6];
+    // Now read the value and return it
+    res = read(i2cFileDesc, &buff, 6 * sizeof(unsigned char));
     if (res != sizeof(buff)) {
         perror("I2C: Unable to read from i2c register");
         exit(-1);
-	}
-	
-	// Assuming buff contains a signed integer in little-endian format
+    }
+
+    // Assuming buff contains a signed integer in little-endian format
     int integerValue = 0;
     for (int i = sizeof(buff) - 1; i >= 0; i--) {
         integerValue = (integerValue << 8) | buff[i];
     }
 
-    // If the highest bit of the integer is set, indicating a negative value,
-    // perform sign extension
+    // Sign extend the last byte if it's negative
     if (buff[sizeof(buff) - 1] & 0x80) {
-        integerValue |= ((unsigned int)(-1) ^ 0xFFFFFFFF) >> (sizeof(unsigned int) * 8 - sizeof(buff) * 8);
+        integerValue |= 0xFF << (sizeof(buff) - 1) * 8;
     }
 
     return integerValue;
