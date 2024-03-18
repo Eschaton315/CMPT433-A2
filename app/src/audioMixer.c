@@ -13,7 +13,10 @@
 #define BASS "wave-files/100051__menegass__gui-drum-bd-hard.wav"
 #define SNARE "wave-files/100059__menegass__gui-drum-snare-soft.wav"
 #define HIHAT "wave-files/100053__menegass__gui-drum-cc.wav"
-#define NUM_BEATS 3
+#define CYN "wave-files/100057__menegass__gui-drum-cyn-soft.wav"
+#define TOMHI "wave-files/100062__menegass__gui-drum-tom-hi-hard.wav"
+#define TOMLO "wave-files/100064__menegass__gui-drum-tom-lo-hard.wav"
+#define NUM_BEATS 6
 #define MAX_SOUND_BITE 50
 #define SHRT_MAX 32767
 #define SHRT_MIN -32768
@@ -30,7 +33,7 @@ typedef struct
 
 float volume = 0.8;
 int bpm = 120;
-int beatNumber = 1;
+int beatNumber = 2;
 
 static int currentBeat = 0;
 bool playerActive = true;
@@ -66,11 +69,14 @@ void audioMixer_init(){
         soundBites[i].isFull = false;
     }
     handle = Audio_openDevice();
-    printf("device open\n");
+    //printf("device open\n");
     Audio_readWaveFileIntoMemory(HIHAT,&sampleFiles[0]);
     Audio_readWaveFileIntoMemory(SNARE,&sampleFiles[1]);
     Audio_readWaveFileIntoMemory(BASS,&sampleFiles[2]);
-    printf("BASS numsample = %d\n",sampleFiles[2].numSamples);
+    Audio_readWaveFileIntoMemory(CYN,&sampleFiles[3]);
+    Audio_readWaveFileIntoMemory(TOMHI,&sampleFiles[4]);
+    Audio_readWaveFileIntoMemory(TOMLO,&sampleFiles[5]);
+    //printf("BASS numsample = %d\n",sampleFiles[2].numSamples);
     pthread_create(&beatThread,NULL,&audioMixer_selectBeat,NULL);
     sleepForMs(100);
     unsigned long unusedBufferSize = 0;
@@ -89,14 +95,26 @@ void audioMixer_setVol(float newVol){
     return;
 }
 
-void audioMixer_setbpm(int newBpm){
+float audioMixer_getVol(){
+    return volume;
+}
+
+void audioMixer_setBpm(int newBpm){
     bpm = newBpm;
     return;
+}
+
+int audioMixer_getBpm(){
+    return bpm;
 }
 
 void audioMixer_setBeat(int newBeatNum){
     beatNumber = newBeatNum;
     return;
+}
+
+int audioMixer_getBeat(){
+    return beatNumber;
 }
 
 void audioMixer_queueSound(wavedata_t* sample,int location,int position){
@@ -141,6 +159,14 @@ void* audioMixer_selectBeat(){
             if(halfBeat == 2){
                 audioMixer_queueSound(&sampleFiles[1],0,halfBeat);
             }
+            break;
+        case 2:
+            audioMixer_queueSound(&sampleFiles[3],0,halfBeat);
+            audioMixer_queueSound(&sampleFiles[4],0,halfBeat);
+            if(halfBeat==3){
+                audioMixer_queueSound(&sampleFiles[5],0,halfBeat);
+            }
+            break;
             break;
         default:
             break;
