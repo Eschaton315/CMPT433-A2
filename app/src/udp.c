@@ -185,7 +185,7 @@ static void RunCommand(char* command){
 			
 		//Decrease Volume
 		case 5: ;
-			i
+			
 			break;
 			
 		//Increase Tempo

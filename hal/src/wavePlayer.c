@@ -80,6 +80,7 @@ void wavePlayer_play(/*void *arguments*/ char* path, float volume)
 
 	// Load wave file we want to play:
 	wavedata_t sampleFile;
+	
 	Audio_readWaveFileIntoMemory(path, &sampleFile);
 	
 	// Set Volume
@@ -208,10 +209,9 @@ void Audio_playFile(snd_pcm_t *handle, wavedata_t *pWaveData)
 		printf("Short write (expected %d, wrote %li)\n", pWaveData->numSamples, frames);
 }
 
-/*
+
 void wavePlayer_cleanup(snd_pcm_t *handle){
 	snd_pcm_drain(handle);
 	snd_pcm_hw_free(handle);
 	snd_pcm_close(handle);
 }
-*/
