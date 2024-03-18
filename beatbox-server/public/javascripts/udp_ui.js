@@ -5,8 +5,10 @@
 var socket = io.connect();
 $(document).ready(function() {
 	
-	displayError(false);	
+	displayError(false);
+	displayError2(false);	
 	setInterval(updateInformation, 500);	
+	setInterval(checkServerConnection, 500);
 	
 	$('#modeNone').click(function(){
 		sendPrimeCommand("silence");
@@ -85,7 +87,7 @@ $(document).ready(function() {
 			//Can add utils here
 			
 		});
-		displayError(true);		
+		displayError2(true);		
 	});
 	
 });
@@ -132,6 +134,18 @@ function displayError(display){
 	
 }
 
+function displayError2(display2){
+	if(display2 == false){
+		var errorBox = document.getElementById('error-box2');
+		errorBox.style.display = 'none';
+		
+	}else{
+		var errorBox = document.getElementById('error-box2');
+		errorBox.style.display = 'block';
+	}
+	
+}
+
 function decreaseVolume() {
 	var volume = document.getElementById('volumeid').value;
 	
@@ -168,6 +182,26 @@ function decreaseTempo() {
 		tempo = tempo - 5;
 		sendPrimeCommand("changetempo" + tempo)
 	}	
+}
+
+function checkServerConnection() {
+  fetch('http://localhost:8088')
+    .then(response => {
+      if (response.ok) {
+        return response.text(); // Return the response body
+      } else {
+        throw new Error('Server connection check failed');
+      }
+    })
+    .then(data => {
+      console.log(data); // Log the response from the server
+      // You can update UI based on server connection status here
+    })
+    .catch(error => {
+      console.error('Error checking server connection:', error);
+      // Handle errors here
+	  displayError(true);
+    });
 }
 
 function sendPrimeCommand(message) {
