@@ -40,6 +40,10 @@ static double yPrev = -999999;
 static double z = -999999;
 static double zPrev = -999999;
 static unsigned char regVal;
+static bool statusPlayHiHat = false;
+static bool statusPlaySnare = false;
+static bool statusPlayBase = false;
+static bool statusHold;
 
 //Initialize the accelerometer
 void acc_init(){
@@ -97,15 +101,42 @@ void setPrevXYZ(){
 void playSounds(){
 	if(abs(x - xPrev) > 7000){
 		//play hi-hat
+		statusPlayHiHat = true;
+		
 	}
 	
 	if(abs(y - yPrev) > 7000){
 		//play snare
+		statusPlaySnare = true;
+		
 	}
 	
 	if(abs(z - zPrev) > 13000){
 		//play base
+		statusPlayBase = true;
+		
 	}
+	
+}
+
+bool playHiHat(){
+	statusHold = statusPlayHiHat;
+	statusPlayHiHat = false;
+	return statusPlayHiHat;
+	
+}
+
+bool playSnare(){
+	statusHold = statusPlayHiHat;
+	statusPlaySnare = false;
+	return statusPlaySnare;
+	
+}
+
+bool playBase(){
+	statusHold = statusPlayHiHat;
+	statusPlayBase = false;
+	return statusPlayBase;
 	
 }
 
