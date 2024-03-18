@@ -269,7 +269,7 @@ static void RunCommand(char* command){
 			audioMixer_setBpm(tempoHold);
 			
 			tempoHold = audioMixer_getBpm();
-			sprintf(reply, "%d", atoi(tempoHold));
+			sprintf(reply, "%d", tempoHold);
 
 			
 			break;
@@ -290,7 +290,7 @@ static void RunCommand(char* command){
 		//Grab tempo var and place in the reply	
 		case 8:
 			tempoHold = audioMixer_getBpm();
-			sprintf(reply, "%d", atoi(tempoHold));
+			sprintf(reply, "%d", tempoHold);
 
 			
 			break;
