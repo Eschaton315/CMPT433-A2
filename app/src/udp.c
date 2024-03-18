@@ -14,6 +14,7 @@
 #define REPLY_MAX_SIZE 1500
 #define RECEIVED_MAX_SIZE 1024
 
+#define PROC_PATH "/proc/uptime"
 
 //Commands defined
 //1 = Silence, 2 = Rock, 3 = Custom Beat, 4 = Change Volume
@@ -31,6 +32,7 @@
 #define COM_PLAYHAT "hat"
 #define COM_PLAYSNARE "snare"
 #define COM_PLAYBASE "base"
+
 
 static pthread_t udpThread;
 static char reply[REPLY_MAX_SIZE];
@@ -77,6 +79,25 @@ bool getFirstCom(void){
 //get value of firstCom Variable
 void changeFirstCom(bool status){
 	firstCom = status;
+}
+
+void ReadFileContents(char *path){
+
+    FILE *pFile = fopen(path, "r");
+    if (pFile == NULL) {
+        printf("ERROR: Unable to open file (%s) for read\n", path);
+        return false;
+    }
+    // Read string (line)
+
+    const int MAX_LENGTH = 1024;
+    char buff[MAX_LENGTH];
+    fgets(buff, MAX_LENGTH, pFile);
+    // Close
+    fclose(pFile);
+
+	strncat(reply, buff, strlen(buff));
+
 }
 
 //Function for listening to UDP packets
@@ -271,7 +292,7 @@ static void RunCommand(char* command){
 		
 		//Grab status var and place in the reply		
 		case 9:
-			
+			ReadFileContents(PROC_PATH);
 			
 			break;
 			

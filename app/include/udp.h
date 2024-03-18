@@ -14,5 +14,7 @@ bool getFirstCom(void);
 //get value of firstCom Variable
 void changeFirstCom(bool status);
 
+//read file content and place in reply
+void ReadFileContents(char *path)
 
 #endif
