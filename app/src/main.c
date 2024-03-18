@@ -6,13 +6,18 @@
 #include "audioMixer.h"
 #include "hal/joyStick.h"
 #include "hal/wavePlayer.h"
+#include "hal/acc.h"
 #include "udp.h"
 #include "timer.h" 
 #include "terminate.h"
 
+
 #define BASE_BPM 120
 #define BASE_VOLUME 0.8
 #define MAX_BEAT 3
+#define BASS "wave-files/100051__menegass__gui-drum-bd-hard.wav"
+#define SNARE "wave-files/100059__menegass__gui-drum-snare-soft.wav"
+#define HIHAT "wave-files/100053__menegass__gui-drum-cc.wav"
 
 int main(){
 
@@ -32,6 +37,19 @@ int main(){
     float volume = audioMixer_getVol();
     int bpm = audioMixer_getBpm();
     int beatNum = audioMixer_getBeat();
+
+    //ACCEL CHECK
+    if(playHiHat()){
+        audioMixer_selectSound(HIHAT);
+    }
+    if(playBase()){
+        audioMixer_selectSound(BASS);
+    }
+    if(playSnare()){
+        audioMixer_selectSound(SNARE);
+    }
+
+    //JOYSTICK CHECK
     switch (joyStickVal)
     {
     case 1:
