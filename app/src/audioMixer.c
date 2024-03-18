@@ -34,7 +34,6 @@ float volume = 0.8;
 int bpm = 120;
 int beatNumber = 1;
 
-//static int currentBeat = 0;
 long long baseTime;
 long long minTime;
 long long maxTime;
@@ -47,7 +46,6 @@ static pthread_t beatThread;
 static pthread_mutex_t soundMutex = PTHREAD_MUTEX_INITIALIZER;
 static wavedata_t sampleFiles[NUM_BEATS];
 static playData_t soundBites[MAX_SOUND_BITE];
-//static playData_t overflowBites[MAX_SOUND_BITE];
 snd_pcm_t *handle;
 
 //locks for thread synchronization
@@ -58,16 +56,21 @@ static void unlock(){
     pthread_mutex_unlock(&soundMutex);
 }
 
+//get functions for text display
+
 float getMinTime(){
     float minSec = (float)minTime;
-    return minTime/1000;
+    return minSec/1000;
 }
 
 float getMaxTime(){
     float maxSec = (float)maxTime;
-    return maxTime/1000;
+    return maxSec/1000;
 }
 
+unsigned long getBufferNum(){
+    return playbackBufferSize;
+}
 
 //prototype
 void* audioMixer_selectBeat();
@@ -90,20 +93,18 @@ void audioMixer_init(){
     Audio_readWaveFileIntoMemory(CYN,&sampleFiles[3]);
     Audio_readWaveFileIntoMemory(TOMHI,&sampleFiles[4]);
     Audio_readWaveFileIntoMemory(TOMLO,&sampleFiles[5]);
-    //printf("BASS numsample = %d\n",sampleFiles[2].numSamples);
     pthread_create(&beatThread,NULL,&audioMixer_selectBeat,NULL);
-    //sleepForMs(100);
     unsigned long unusedBufferSize = 0;
 	snd_pcm_get_params(handle, &unusedBufferSize, &playbackBufferSize);
 	// ..allocate playback buffer:
     //playbackBufferSize = 44100;
 	playbackBuffer = malloc(playbackBufferSize * sizeof(*playbackBuffer));
-    //printf("buffersize = %lu\n", playbackBufferSize);
     pthread_create(&playThread,NULL,&playBeat,NULL);
 
     return;
 }
 
+//set and get functions for beat control
 void audioMixer_setVol(float newVol){
     volume = newVol;
     return;
@@ -133,7 +134,6 @@ int audioMixer_getBeat(){
 
 void audioMixer_queueSound(wavedata_t* sample,int location){
 
-    //queue audio soundbite;
     bool soundQueued = false;
     lock();
     for(int i=0 ;i < MAX_SOUND_BITE;i++){
@@ -152,7 +152,7 @@ void audioMixer_queueSound(wavedata_t* sample,int location){
     if(!soundQueued){
         printf("ERROR SOUND NOT QUEUED\n");
     }else{
-       printf("queue sound success\n");
+       //printf("queue sound success\n");
     }
 }
 
@@ -195,13 +195,14 @@ void* audioMixer_selectBeat(){
 }
 
 void audioMixer_selectSound(char* path){
-    if(path == BASS){
+    
+    if(strcmp(path,BASS)==0){
         audioMixer_queueSound(&sampleFiles[2],0);  
     }
-    if(path == SNARE){
+    if(strcmp(path,SNARE)==0){
         audioMixer_queueSound(&sampleFiles[2],0);  
     }
-    if(path == HIHAT){
+    if(strcmp(path,HIHAT)==0){
         audioMixer_queueSound(&sampleFiles[2],0);  
     }
 
@@ -222,11 +223,6 @@ void createBuffer(){
     
     memset(playbackBuffer,0,playbackBufferSize);
     short newData;
-    //int beatOffset = 0;
-    //int overFlowCount =0;
-    
-    //int halfBeatinMS = 60000 / bpm / 2;
-   // int halfBeatinSamples = (halfBeatinMS*SAMPLE_RATE) / 1000;
 
 
 

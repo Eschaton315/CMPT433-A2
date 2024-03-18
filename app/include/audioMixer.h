@@ -6,6 +6,8 @@ float getMinTime();
 
 float getMaxTime();
 
+unsigned long getBufferNum();
+
 void audioMixer_init();
 
 void audioMixer_setVol(float newVol);

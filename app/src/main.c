@@ -15,14 +15,6 @@
 #define MAX_BEAT 3
 
 int main(){
-    //char* path = "wave-files/100067__menegass__gui-drum-tom-mid-soft.wav";
-    //bool active = false;
-    int bpm = BASE_BPM;
-   // float volume = BASE_VOLUME; 
-
-    if(bpm!=0){
-        printf("bpm = %d\n",bpm);
-    }
 
     //config joytick
     //configPinGPIO();
@@ -106,7 +98,7 @@ int main(){
         float minTime = getMinTime();
         float maxTime = getMaxTime();
         float avg = (minTime+maxTime)/2;
-        printf("M%d %dbpm Audio[%0.3f,%0.3f] avg %0.3f/ Accel[,] avg /\n",audioMixer_getBeat(),audioMixer_getBpm(),minTime,maxTime,avg);
+        printf("M%d %dbpm Audio[%0.3f,%0.3f] avg %0.3f/%lu Accel[,] avg /\n",audioMixer_getBeat(),audioMixer_getBpm(),minTime,maxTime,avg,getBufferNum());
         time = newTime;
     }
    }
