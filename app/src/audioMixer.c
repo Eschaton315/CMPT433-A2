@@ -33,7 +33,7 @@ typedef struct
 
 float volume = 0.8;
 int bpm = 120;
-int beatNumber = 2;
+int beatNumber = 0;
 
 static int currentBeat = 0;
 bool playerActive = true;
@@ -171,7 +171,7 @@ void* audioMixer_selectBeat(){
         default:
             break;
         }
-        printf("beat number %d queued\n",halfBeat);
+        //printf("beat number %d queued\n",halfBeat);
         sleepForMs(halfBeatinMS);
         halfBeat++;
         if(halfBeat>=4){
