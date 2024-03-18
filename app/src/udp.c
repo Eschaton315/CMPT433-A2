@@ -40,7 +40,7 @@ static char unitBuffer[REPLY_MAX_SIZE];
 static float volumeHold;
 static int tempoHold;
 static int beatNum;
-static char modeHold[REPLY_MAX_SIZE];
+static int modeHold;
 
 
 
@@ -230,7 +230,7 @@ static void RunCommand(char* command){
 			audioMixer_setVol(volumeHold);
 			
 			volumeHold = audioMixer_getVol();
-			sprintf(reply, "%d", atoi(volumeHold));
+			sprintf(reply, "%d", atof(volumeHold));
 			
 			break;
 			
@@ -257,7 +257,7 @@ static void RunCommand(char* command){
 		//Grab volume var and place in the reply	
 		case 7:
 			volumeHold = audioMixer_getVol();
-			sprintf(reply, "%d", atoi(volumeHold));
+			sprintf(reply, "%d", atof(volumeHold));
 			
 			break;	
 			
@@ -278,8 +278,14 @@ static void RunCommand(char* command){
 		//Grab mode var and place in the reply	
 		case 10:
 			modeHold = audioMixer_getMode();
-			strncat(reply, modeHold, strlen(modeHold));
-			
+			if (modeHold == 0){
+				sprintf(reply, "Nothing");
+			}else if (modeHold == 1){
+				sprintf(reply, "rock");
+			}else {
+				sprintf(reply, "custom beat");
+			}
+					
 			break;
 		
 		//Play Hi-Hat	
