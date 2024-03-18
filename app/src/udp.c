@@ -27,7 +27,10 @@
 #define COM_GETTEMPO "gettempo"
 #define COM_GETSTATUS "getstatus"
 #define COM_STOP "stop"
-
+#define COM_GETMODE "getmode"
+#define COM_PLAYHAT "hat"
+#define COM_PLAYSNARE "snare"
+#define COM_PLAYBASE "base"
 
 static pthread_t udpThread;
 static char reply[REPLY_MAX_SIZE];
@@ -45,7 +48,8 @@ static void RunCommand(char* command);
 
 //Checks and find which command was sent
 //1 = Silence, 2 = Rock, 3 = Custom Beat, 4 = Change Volume
-//5 = Change Tempo, 6 = Stop
+//5 = Change Tempo, 6 = Stop, 7 = Get Volume, 8 = Get Tempo
+//9 = Get Status, 10 = Get Mode
 static int CheckCommand(char* command);
 
 
@@ -119,7 +123,8 @@ static void *UDPListen(){
 
 //Checking message to see what command was sent
 //1 = Silence, 2 = Rock, 3 = Custom Beat, 4 = Change Volume
-//5 = Change Tempo, 6 = Stop
+//5 = Change Tempo, 6 = Stop, 7 = Get Volume, 8 = Get Tempo
+//9 = Get Status, 10 = Get Mode
 static int CheckCommand(char* command){
 	
 	
@@ -158,6 +163,22 @@ static int CheckCommand(char* command){
 	
 	if(strncmp(command, COM_GETSTATUS, strlen(COM_GETSTATUS)) == 0){
 		return 9;
+	}
+	
+	if(strncmp(command, COM_GETMODE, strlen(COM_GETMODE)) == 0){
+		return 10;
+	}
+	
+	if(strncmp(command, COM_PLAYHAT, strlen(COM_PLAYHAT)) == 0){
+		return 11;
+	}
+	
+	if(strncmp(command, COM_PLAYSNARE, strlen(COM_PLAYSNARE)) == 0){
+		return 12;
+	}
+	
+	if(strncmp(command, COM_PLAYBASE, strlen(COM_PLAYBASE)) == 0){
+		return 13;
 	}
 	
 	//if none of the strings are equal, then it is invalid
@@ -212,21 +233,47 @@ static void RunCommand(char* command){
 			
 			break;
 			
+		//Grab volume var and place in the reply	
 		case 7:
-			//Grab volume var and place in the reply
+			
 			
 			break;	
 			
+		//Grab tempo var and place in the reply	
 		case 8:
-			//Grab tempo var and place in the reply
 			
-			break;
-			
-		case 9:
-			//Grab status var and place in the reply
 			
 			break;
 		
+		//Grab status var and place in the reply		
+		case 9:
+			
+			
+			break;
+			
+		//Grab mode var and place in the reply	
+		case 10:
+			
+			
+			break;
+		
+		//Play Hi-Hat	
+		case 11:
+			
+			
+			break;
+		
+		//Play Snare	
+		case 12:
+			
+			
+			break;
+			
+		//Play Base	
+		case 13:
+			
+			
+			break;
 	}
 	
 	

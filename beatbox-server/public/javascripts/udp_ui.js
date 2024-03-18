@@ -5,29 +5,8 @@
 var socket = io.connect();
 $(document).ready(function() {
 	
-	displayError(false);
-	
-	sendPrimeCommand("getvolume");
-	socket.on('commandReply', function(result) {
-		var newDiv = $('<div></div>').text(result);
-		$('#volumeid').replaceWith(newDiv);
-		
-	});
-	
-	sendPrimeCommand("getstatus");
-	socket.on('commandReply', function(result) {
-		var newDiv = $('<div></div>').text(result);
-		$('#status').replaceWith(newDiv);
-		
-	});
-	
-	sendPrimeCommand("gettempo");
-	socket.on('commandReply', function(result) {
-		var newDiv = $('<div></div>').text(result);
-		$('#tempoid').replaceWith(newDiv);
-		
-	});
-		
+	displayError(false);	
+	setInterval(updateInformation, 500);	
 	
 	$('#modeNone').click(function(){
 		sendPrimeCommand("silence");
@@ -65,28 +44,68 @@ $(document).ready(function() {
 		});
 	});
 	$('#tempoDown').click(function(){
-		decreaseVolume();
+		decreaseTempo();
 		socket.on('commandReply', function(result) {
 			var newDiv = $('<div></div>').text(result);
 			$('#tempoid').replaceWith(newDiv);
 		});
 	});
 	$('#tempoUp').click(function(){
-		increaseVolume();
+		increaseTempo();
 		socket.on('commandReply', function(result) {
 			var newDiv = $('<div></div>').text(result);
 			$('#tempoid').replaceWith(newDiv);
 		});
 	});	
+	$('#hat').click(function(){
+		sendPrimeCommand("hat");
+
+		});
+	});	
+	$('#snare').click(function(){
+		sendPrimeCommand("snare");
+
+		});
+	});	
+	$('#base').click(function(){
+		sendPrimeCommand("base");
+	});	
 	$('#stop').click(function(){
 		sendPrimeCommand("stop");
-		socket.on('commandReply', function(result) {
-			var newDiv = $('<div></div>').text(result);
-			$('#tempoid').replaceWith(newDiv);
-		});
+		displayError(true);		
 	});
 	
 });
+
+function updateInformation(){
+	sendPrimeCommand("getvolume");
+	socket.on('commandReply', function(result) {
+		var newDiv = $('<div></div>').text(result);
+		$('#volumeid').replaceWith(newDiv);
+		
+	});
+	
+	sendPrimeCommand("getstatus");
+	socket.on('commandReply', function(result) {
+		var newDiv = $('<div></div>').text(result);
+		$('#status').replaceWith(newDiv);
+		
+	});
+	
+	sendPrimeCommand("gettempo");
+	socket.on('commandReply', function(result) {
+		var newDiv = $('<div></div>').text(result);
+		$('#tempoid').replaceWith(newDiv);
+		
+	});
+	
+	sendPrimeCommand("getmode");
+	socket.on('commandReply', function(result) {
+		var newDiv = $('<div></div>').text(result);
+		$('#modeid').replaceWith(newDiv);
+		
+	});
+}
 
 function displayError(display){
 	if(display == false){
