@@ -116,13 +116,11 @@ int main(){
     }
     newTime = getTimeInMs();
     if(newTime>=time+1000){
-        Period_statistics_t *timeStat;
-        Period_getStatisticsAndClear(PERIOD_EVENT_BUFFER,timeStat);
         float minTime = getMinTime();
         float maxTime = getMaxTime();
         float avg = (minTime+maxTime)/2;
-        printf("M%d %dbpm Audio[%0.3f,%0.3f] avg %0.3f/%d Accel[,] avg /\n",timeStat->minPeriodInMs,timeStat->maxPeriodInMs,timeStat->avgPeriodInMs,timeStat->numSamples);
-        //printf("M%d %dbpm Audio[%0.3f,%0.3f] avg %0.3f/%lu Accel[,] avg /\n",audioMixer_getBeat(),audioMixer_getBpm(),minTime,maxTime,avg,getBufferNum());
+       
+        printf("M%d %dbpm Audio[%0.3f,%0.3f] avg %0.3f/%lu Accel[,] avg /\n",audioMixer_getBeat(),audioMixer_getBpm(),minTime,maxTime,avg,getBufferNum());
         time = newTime;
     }
    }

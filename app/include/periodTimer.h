@@ -19,7 +19,7 @@
 #define MAX_EVENT_TIMESTAMPS (1024*4)
 
 enum Period_whichEvent {
-    PERIOD_EVENT_SAMPLE_LIGHT,
+    PERIOD_EVENT_BUFFER,
     NUM_PERIOD_EVENTS
 };
 
