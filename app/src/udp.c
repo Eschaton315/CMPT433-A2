@@ -277,7 +277,7 @@ static void RunCommand(char* command){
 			
 		//Grab mode var and place in the reply	
 		case 10:
-			modeHold = audioMixer_getMode();
+			modeHold = audioMixer_getBeat();
 			strncat(reply, modeHold, strlen(modeHold));
 			
 			break;
