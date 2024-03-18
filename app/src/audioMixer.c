@@ -233,60 +233,6 @@ void createBuffer(){
         //printf("unlocked\n");
     }
 
-    /*
-    for(int i = 0; i<MAX_SOUND_BITE; i++){
-        lock();
-        //assert(soundBites[i].soundSamples->numSamples > 0);
-	    //assert(soundBites[i].soundSamples->pData);
-        //printf("mutex locked\n");
-        if(soundBites[i].isFull){
-            
-            int offset = soundBites[i].location;
-            int numSamples = (soundBites[i].soundSamples->numSamples)-offset;
-            //bool fullAudioPlayed = true;
-            if(currentBeat!=soundBites[i].position){
-                beatOffset = beatOffset+(halfBeatinSamples-offset);
-
-                currentBeat = soundBites[i].position;
-            }
-
-            for(int j = beatOffset; j < beatOffset+numSamples;j++){
-                if(j<(long)playbackBufferSize){
-
-                    newData = soundBites[i].soundSamples->pData[offset];
-                    //printf("%d ",soundBites[i].soundSamples->pData[offset]);
-                    short temp = playbackBuffer[j] + newData;
-
-                    if(temp > 0 && playbackBuffer[j] < 0 && newData < 0){
-                        playbackBuffer[j] = SHRT_MIN;
-                    }else if (temp < 0 && playbackBuffer[j] > 0 && newData > 0){
-                        playbackBuffer[j] = SHRT_MAX;
-                    }else{
-                        playbackBuffer[j] = temp;    
-                    }
-                    //printf("loaded sample %d",newData);
-                    offset++;
-                }else{
-                    unlock();
-
-                    audioMixer_queueSound(soundBites[i].soundSamples,offset,currentBeat);
-
-                    lock();
-
-                    break;
-                }
-                
-            }
-            
-        }
-        soundBites[i].isFull = false;
-        soundBites[i].soundSamples = NULL;
-        unlock();
-        //printf("unlocked\n");
-    }
-    */
-    
-    //printf("BUFFER COMPLETE\n");
     queueFull = false;
 }
 
