@@ -41,7 +41,7 @@ static double y = -999999;
 static double yPrev = -999999;
 static double z = -999999;
 static double zPrev = -999999;
-static unsigned char regVal[6];
+static int regVal;
 static bool statusPlayHiHat = false;
 static bool statusPlaySnare = false;
 static bool statusPlayBase = false;
@@ -172,14 +172,6 @@ static int initI2cBus(char* bus, int address)
 
 
 
-unsigned int arrayToUnsignedInt(const unsigned char *array, size_t size) {
-    unsigned int result = 0;
-    for (size_t i = 0; i < size; ++i) {
-        result = (result << 8) | array[i];
-    }
-    return result;
-}
-
 //read the register
 static unsigned char readI2cReg(int i2cFileDesc, unsigned char regAddr)
 {
@@ -196,5 +188,17 @@ static unsigned char readI2cReg(int i2cFileDesc, unsigned char regAddr)
         perror("I2C: Unable to read from i2c register");
         exit(-1);
 	}
-	return buff;
+	
+	int integerValue = 0;
+    for (int i = sizeof(buff) - 1; i >= 0; i--) {
+        integerValue = (integerValue << 8) | buff[i];
+    }
+
+    // If the highest bit of the integer is set, indicating a negative value,
+    // perform sign extension
+    if (buff[sizeof(buff) - 1] & 0x80) {
+        integerValue |= (~0 << (sizeof(buff) * 8));
+    }
+
+    return integerValue;
 }
