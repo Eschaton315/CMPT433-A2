@@ -88,6 +88,7 @@ int main(){
             beatNum = 0;
         }
         audioMixer_setBeat(beatNum);
+        sleepForMs(300);
         break;
 
     default:

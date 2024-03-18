@@ -103,6 +103,8 @@ bool ReadFileContents(char *path){
 
 	strncat(reply, buff, strlen(buff));
 
+	return true;
+
 }
 
 //Function for listening to UDP packets
