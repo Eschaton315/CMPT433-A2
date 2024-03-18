@@ -179,6 +179,18 @@ void* audioMixer_selectBeat(){
     return NULL;
 }
 
+void audioMixer_selectSound(char* path){
+    if(path == BASS){
+        audioMixer_queueSound(&sampleFiles[2],0);  
+    }
+    if(path == SNARE){
+        audioMixer_queueSound(&sampleFiles[2],0);  
+    }
+    if(path == HIHAT){
+        audioMixer_queueSound(&sampleFiles[2],0);  
+    }
+
+}
 
 void audioMixer_cleanup(){
     playerActive = false;
