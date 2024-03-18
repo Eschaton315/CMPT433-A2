@@ -101,19 +101,19 @@ void setPrevXYZ(){
 
 //Play sounds from the accelerometer based on movement
 void playSounds(){
-	if(abs(x - xPrev) > 7000){
+	if(fabs(x - xPrev) > 7000){
 		//play hi-hat
 		statusPlayHiHat = true;
 		
 	}
 	
-	if(abs(y - yPrev) > 7000){
+	if(fabs(y - yPrev) > 7000){
 		//play snare
 		statusPlaySnare = true;
 		
 	}
 	
-	if(abs(z - zPrev) > 13000){
+	if(fabs(z - zPrev) > 13000){
 		//play base
 		statusPlayBase = true;
 		
