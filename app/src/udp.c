@@ -6,6 +6,8 @@
 #include <pthread.h>
 #include <stdbool.h>
 #include "udp.h"
+#include "hal/wavePlayer.h"
+#include "audioMixer.h"
 #include "terminate.h"
 
 
@@ -32,7 +34,9 @@
 #define COM_PLAYHAT "hat"
 #define COM_PLAYSNARE "snare"
 #define COM_PLAYBASE "base"
-
+#define BASS "wave-files/100051__menegass__gui-drum-bd-hard.wav"
+#define SNARE "wave-files/100059__menegass__gui-drum-snare-soft.wav"
+#define HIHAT "wave-files/100053__menegass__gui-drum-cc.wav"
 
 static pthread_t udpThread;
 static char reply[REPLY_MAX_SIZE];
@@ -43,6 +47,7 @@ static float volumeHold;
 static int tempoHold;
 static int beatNum;
 static int modeHold;
+wavedata_t sampleFile;
 
 
 
@@ -312,20 +317,21 @@ static void RunCommand(char* command){
 		//Play Hi-Hat	
 		case 11:
 			
+			audioMixer_selectSound(HIHAT);
 			sprintf(reply, "Hi-Hat played");
 			
 			break;
 		
 		//Play Snare	
 		case 12:
-			
+			audioMixer_selectSound(SNARE);
 			sprintf(reply, "Snare played");
 			
 			break;
 			
 		//Play Base	
 		case 13:
-			
+			audioMixer_selectSound(BASS);
 			sprintf(reply, "Base played");
 			
 			break;
