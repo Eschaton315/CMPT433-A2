@@ -14,7 +14,7 @@
 #define SNARE "wave-files/100059__menegass__gui-drum-snare-soft.wav"
 #define HIHAT "wave-files/100053__menegass__gui-drum-cc.wav"
 #define NUM_BEATS 3
-#define MAX_SOUND_BITE 20
+#define MAX_SOUND_BITE 30
 #define SHRT_MAX 32767
 #define SHRT_MIN -32768
 #define SAMPLE_RATE 44100
@@ -69,8 +69,7 @@ void audioMixer_init(){
     }
     
 
-    //pthread_create(&mixerThread, NULL,&audioMixer_playBeat ,NULL);
-    //handle = Audio_openDevice();
+
     handle = Audio_openDevice();
     printf("device open\n");
     Audio_readWaveFileIntoMemory(HIHAT,&sampleFiles[0]);
@@ -83,7 +82,7 @@ void audioMixer_init(){
     unsigned long unusedBufferSize = 0;
 	snd_pcm_get_params(handle, &unusedBufferSize, &playbackBufferSize);
 	// ..allocate playback buffer:
-    //playbackBufferSize = 44100;
+    //playbackBufferSize = 441000;
 	playbackBuffer = malloc(playbackBufferSize * sizeof(*playbackBuffer));
     printf("buffersize = %lu\n", playbackBufferSize);
     pthread_create(&playThread,NULL,&playBeat,NULL);
@@ -103,7 +102,6 @@ void audioMixer_queueSound(wavedata_t* sample,int location,int position){
             soundBites[i].isFull = true;
             soundQueued = true;
 
-            
             if(i == MAX_SOUND_BITE-1){
                 queueFull = true;
             }
@@ -116,15 +114,6 @@ void audioMixer_queueSound(wavedata_t* sample,int location,int position){
     }else{
         printf("queuesound success\n");
     }
-    /*
-    soundBites[soundQueuePosition].soundSamples = &sample;
-    soundBites[soundQueuePosition].location = location;
-    soundBites[soundQueuePosition].position = position;
-    soundQueuePosition++;
-    if(soundQueuePosition>=MAX_SOUND_BITE){
-        soundQueuePosition = 0;
-    }
-    */
 }
 
 void* audioMixer_selectBeat(){
@@ -132,19 +121,14 @@ void* audioMixer_selectBeat(){
     while(playerActive){
         printf("start beat#%d\n",halfBeat);
     int halfBeatinMS = 60000 / bpm / 2;
-    //int halfBeatinSamples = (halfBeatinMS*SAMPLE_RATE) / 1000;
         switch (beatNumber)
         {
         case 1:
-            //audioMixer_queueSound(samples[0],halfBeat*halfBeatinSamples);
             audioMixer_queueSound(&sampleFiles[0],0,halfBeat);
-            printf("YES\n");
             if(halfBeat == 0){
-                //audioMixer_queueSound(samples[2],halfBeat*halfBeatinSamples);
                 audioMixer_queueSound(&sampleFiles[2],0,halfBeat);
             }
             if(halfBeat == 2){
-                //audioMixer_queueSound(samples[1],halfBeat*halfBeatinSamples);
                 audioMixer_queueSound(&sampleFiles[1],0,halfBeat);
             }
             break;
@@ -163,15 +147,6 @@ void* audioMixer_selectBeat(){
 }
 
 
-
-
-/*
-static void *audioMixer_playBeat(){
-    
-    
-}
-*/
-
 void audioMixer_cleanup(){
     playerActive = false;
     pthread_join(beatThread, NULL);
@@ -183,16 +158,10 @@ void audioMixer_cleanup(){
     return;
 }
 
-void createBuffer(short *Buffer, long BufferSize){
+void createBuffer(short *Buffer, int BufferSize){
     memset(Buffer,0,BufferSize);
     short newData;
     int beatOffset = 0;
-    //int count = 0;
-    //int incompleteAudioPosition = 0;
-    
-    //allocate needed amount;
-     //make sure its thread safe
-     //beat delay is halfbeatinsamples - offset
     
     int halfBeatinMS = 60000 / bpm / 2;
     int halfBeatinSamples = (halfBeatinMS*SAMPLE_RATE) / 1000;
@@ -201,16 +170,15 @@ void createBuffer(short *Buffer, long BufferSize){
         lock();
         printf("mutex locked\n");
         if(soundBites[i].isFull){
-            printf("sound queue# %d\n", i);
             int offset = soundBites[i].location;
-            int numSamples = soundBites[i].soundSamples->numSamples-offset;
-            printf("Numsamples %d\n",numSamples);
-            bool fullAudioPlayed = true;
+            int numSamples = (soundBites[i].soundSamples->numSamples)-offset;
+            //bool fullAudioPlayed = true;
             if(currentBeat!=soundBites[i].position){
                 beatOffset = beatOffset+(halfBeatinSamples-offset);
 
                 currentBeat = soundBites[i].position;
             }
+
             for(int j = beatOffset; j < beatOffset+numSamples;j++){
                 if(j<BufferSize){
 
@@ -227,19 +195,19 @@ void createBuffer(short *Buffer, long BufferSize){
                     //printf("loaded sample %d",newData);
                     offset++;
                 }else{
-                    printf("remenant audio exitst\n");
-                    soundBites[i].location = offset;
-                    fullAudioPlayed = false;
+                    unlock();
+                    audioMixer_queueSound(soundBites[i].soundSamples,offset,currentBeat);
+                    lock();
+                    //fullAudioPlayed = false;
                     break;
                 }
                 
             }
+            /*
             if(!fullAudioPlayed){
-                printf("remenant audio saved to queue\n");
-                unlock();
-                audioMixer_queueSound(soundBites[i].soundSamples,soundBites[i].location,soundBites[i].position);
-                lock();
+                
             }
+            */
             //free soundBites[i]
             soundBites[i].soundSamples = NULL;
             soundBites[i].location = 0;
@@ -250,8 +218,6 @@ void createBuffer(short *Buffer, long BufferSize){
         }
         unlock();
         printf("unlocked\n");
-
-        //beatRestTime = 0; // or whatever the offset is
     }
     printf("BUFFER COMPLETE\n");
     queueFull = false;
@@ -262,13 +228,9 @@ void* playBeat(){
         while(playerActive){
             printf("creating buffer\n");
             createBuffer(playbackBuffer,playbackBufferSize);
-            printf("buffer:\n");
-            for(int i=0;i<(int)playbackBufferSize;i++){
-                printf("%d ",playbackBuffer[i]);
-            }
             wavedata_t bufferSample = {.pData = playbackBuffer,.numSamples = playbackBufferSize};
             Audio_setVolume(&bufferSample,volume);
-            printf("playing buffer\n");
+            printf("playing buffer with %d samples\n",bufferSample.numSamples);
             Audio_playFile(handle, &bufferSample);
 
         }

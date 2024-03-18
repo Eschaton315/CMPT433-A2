@@ -73,7 +73,7 @@ int main(){
     
     }
     */
-    sleepForMs(3000);
+    sleepForMs(10000);
     joystickListener_cleanup();
 
     printf("EXITING\n");
