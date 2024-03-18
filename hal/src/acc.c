@@ -188,16 +188,11 @@ static int readI2cReg(int i2cFileDesc, unsigned char regAddr)
         exit(-1);
     }
 
-    // Assuming buff contains a signed integer in little-endian format
-    int integerValue = 0;
-    for (int i = sizeof(buff) - 1; i >= 0; i--) {
-        integerValue = (integerValue << 8) | buff[i];
+      // Convert buff to int here
+    int intValue = 0;
+    for (int i = 0; i < 6; ++i) {
+        intValue |= (buff[i] << (i * 8)); // Assuming each byte of buff corresponds to one byte of int
     }
 
-    // Sign extend the last byte if it's negative
-    if (buff[sizeof(buff) - 1] & 0x80) {
-        integerValue |= 0xFF << (sizeof(buff) - 1) * 8;
-    }
-
-    return integerValue;
+    return intValue;
 }
