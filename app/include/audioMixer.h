@@ -2,6 +2,10 @@
 #define _AUDIOMIXER_H_
 //#include "hal/wavePlayer.h"
 
+float getMinTime();
+
+float getMaxTime();
+
 void audioMixer_init();
 
 void audioMixer_setVol(float newVol);
@@ -15,6 +19,8 @@ int audioMixer_getBpm();
 void audioMixer_setBeat(int newBeatNum);
 
 int audioMixer_getBeat();
+
+void audioMixer_selectSound(char* path);
 
 void audioMixer_cleanup();
 

@@ -35,6 +35,9 @@ int bpm = 120;
 int beatNumber = 1;
 
 //static int currentBeat = 0;
+long long baseTime;
+long long minTime;
+long long maxTime;
 bool playerActive = true;
 bool queueFull = false;
 unsigned long playbackBufferSize = 0;
@@ -55,6 +58,17 @@ static void unlock(){
     pthread_mutex_unlock(&soundMutex);
 }
 
+float getMinTime(){
+    float minSec = (float)minTime;
+    return minTime/1000;
+}
+
+float getMaxTime(){
+    float maxSec = (float)maxTime;
+    return maxTime/1000;
+}
+
+
 //prototype
 void* audioMixer_selectBeat();
 void* playBeat();
@@ -67,6 +81,7 @@ void audioMixer_init(){
     for(int i; i<MAX_SOUND_BITE;i++){
         soundBites[i].isFull = false;
     }
+    baseTime = getTimeInMs();
     handle = Audio_openDevice();
     //printf("device open\n");
     Audio_readWaveFileIntoMemory(HIHAT,&sampleFiles[0]);
@@ -252,7 +267,9 @@ void* playBeat(){
     
         while(playerActive){
            // printf("creating buffer\n");
+            minTime = getTimeInMs()-baseTime; 
             createBuffer();
+            maxTime = getTimeInMs()-baseTime; 
             wavedata_t bufferSample = {.pData = playbackBuffer,.numSamples = playbackBufferSize};
             Audio_setVolume(&bufferSample,volume);
             //printf("playing buffer with %d samples\n",bufferSample.numSamples);

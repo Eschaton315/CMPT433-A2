@@ -6,7 +6,9 @@
 #include "audioMixer.h"
 #include "hal/joyStick.h"
 #include "hal/wavePlayer.h"
+#include "udp.h"
 #include "timer.h" 
+#include "terminate.h"
 
 #define BASE_BPM 120
 #define BASE_VOLUME 0.8
@@ -27,10 +29,13 @@ int main(){
     joystick_init();
     configPinI2C();
     audioMixer_init();
+    UDPThreadCreate();
+    
    
    long long time = getTimeInMs();
+   long long newTime = 0;
 
-   while(getTimeInMs()<time+7000){
+   while(!getTerminateStatus()){
     int joyStickVal = joystick_getJoystickValue();
     float volume = audioMixer_getVol();
     int bpm = audioMixer_getBpm();
@@ -96,55 +101,18 @@ int main(){
     default:
         break;
     }
-   }
-    //FOR JOYSTICK UP and DOWN for volume control LEFT RIGHT temp used to play audio
-    /*
-    while(joystick_getJoystickValue()!=5){
-        //printf("button is %d\n",joystick_getJoystickValue());
-        if(joystick_getJoystickValue() == 1){
-            if(volume<1){
-                volume = volume+0.05;
-                printf("Volume set to %0.0f\n",volume*100);
-            }else{
-                printf("Already at Max Volume\n");
-            }
-            sleepForMs(300);
-        }
-        if(joystick_getJoystickValue() == 2){
-            if(volume>0){
-                volume = volume-0.05;
-                printf("Volume set to %0.0f\n",(volume*(100))+0.01);
-            }else{
-                printf("Already at Min Volume\n");
-            }
-            sleepForMs(300);
-            
-        }
-        if(joystick_getJoystickValue() == 3){
-            //active = true;
-            path = "wave-files/100059__menegass__gui-drum-snare-soft.wav";
-            //play audio
-            wavePlayer_play(path,NULL,volume);
-        }
-        if(joystick_getJoystickValue() == 4){
-            //active = true;
-            path = "wave-files/100063__menegass__gui-drum-tom-hi-soft.wav";
-            //play audio
-            wavePlayer_play(path,NULL,volume);
-        }
-
-        if(joystick_getJoystickValue() == 5){
-            
-            break;
-        }
-        
-        //sleepForMs(1000);
-        
-    
+    newTime = getTimeInMs();
+    if(newTime>=time+1000){
+        float minTime = getMinTime();
+        float maxTime = getMaxTime();
+        float avg = (minTime+maxTime)/2;
+        printf("M%d %dbpm Audio[%0.3f,%0.3f] avg %0.3f/ Accel[,] avg /\n",audioMixer_getBeat(),audioMixer_getBpm(),minTime,maxTime,avg);
+        time = newTime;
     }
-    */
-    //sleepForMs(10000);
+   }
+   
     joystickListener_cleanup();
+    audioMixer_cleanup();
 
     printf("EXITING\n");
 
