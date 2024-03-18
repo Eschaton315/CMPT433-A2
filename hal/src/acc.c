@@ -40,7 +40,7 @@ static double y = -999999;
 static double yPrev = -999999;
 static double z = -999999;
 static double zPrev = -999999;
-static unsigned char regVal;
+static unsigned char regVal[6];
 static bool statusPlayHiHat = false;
 static bool statusPlaySnare = false;
 static bool statusPlayBase = false;
@@ -192,7 +192,6 @@ static unsigned char readI2cReg(int i2cFileDesc, unsigned char regAddr)
 	}
 
 	// Now read the value and return it
-	unsigned char buff[6];
     res = read(i2cFileDesc, &buff, 6*sizeof(unsigned char));
     if (res != sizeof(buff)) {
         perror("I2C: Unable to read from i2c register");
