@@ -197,7 +197,7 @@ static int readI2cReg(int i2cFileDesc, unsigned char regAddr)
     // If the highest bit of the integer is set, indicating a negative value,
     // perform sign extension
     if (buff[sizeof(buff) - 1] & 0x80) {
-        integerValue |= ((unsigned int)(-1) ^ 0xFFFFFFFF) << (sizeof(buff) * 8);
+        integerValue |= ((unsigned int)(-1) ^ 0xFFFFFFFF) >> (sizeof(unsigned int) * 8 - sizeof(buff) * 8);
     }
 
     return integerValue;
