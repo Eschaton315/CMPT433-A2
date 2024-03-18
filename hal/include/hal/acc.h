@@ -16,4 +16,13 @@ void setPrevXYZ();
 //format the data from the 2 registers to the raw data number
 double formatRawData( int data0, int data1) ;
 
+//Check if Hi Hat should be played
+bool playHiHat();
+
+//Check if snare should be played
+bool playSnare();
+
+//Check if base should be played
+bool playBase();
+
 #endif
