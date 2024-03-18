@@ -27,7 +27,6 @@
 
 
 static int initI2cBus(char* bus, int address);
-static void writeI2cReg(int i2cFileDesc, unsigned char regAddr, unsigned char value);
 static int readI2cReg(int i2cFileDesc, unsigned char regAddr);
 static void *accListener();
 
@@ -69,21 +68,21 @@ void accListener_cleanup(){
 static void *accListener(){
 	while(!EndListen){
 		regVal = readI2cReg(i2cFileDesc, REG_X0);
-		val1 = atoi(regVal);
+		val1 = regVal;
 		regVal = readI2cReg(i2cFileDesc, REG_X1);
-		val2 = atoi(regVal);
+		val2 = regVal;
 		x = formatRawData(val1, val2);
 		
 		regVal = readI2cReg(i2cFileDesc, REG_Y0);
-		val1 = atoi(regVal);
+		val1 = regVal;
 		regVal = readI2cReg(i2cFileDesc, REG_Y1);
-		val2 = atoi(regVal);
+		val2 = regVal;
 		y = formatRawData(val1, val2);
 		
 		regVal = readI2cReg(i2cFileDesc, REG_Z0);
-		val1 = atoi(regVal);
+		val1 = regVal;
 		regVal = readI2cReg(i2cFileDesc, REG_Z1);
-		val2 = atoi(regVal);
+		val2 = regVal;
 		z = formatRawData(val1, val2);
 		
 		playSounds();
@@ -189,7 +188,8 @@ static int readI2cReg(int i2cFileDesc, unsigned char regAddr)
         exit(-1);
 	}
 	
-	int integerValue = 0;
+	// Assuming buff contains a signed integer in little-endian format
+    int integerValue = 0;
     for (int i = sizeof(buff) - 1; i >= 0; i--) {
         integerValue = (integerValue << 8) | buff[i];
     }
@@ -197,7 +197,7 @@ static int readI2cReg(int i2cFileDesc, unsigned char regAddr)
     // If the highest bit of the integer is set, indicating a negative value,
     // perform sign extension
     if (buff[sizeof(buff) - 1] & 0x80) {
-        integerValue |= (~0 << (sizeof(buff) * 8));
+        integerValue |= ((unsigned int)(-1) ^ 0xFFFFFFFF) << (sizeof(buff) * 8);
     }
 
     return integerValue;
