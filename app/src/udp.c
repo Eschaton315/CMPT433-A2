@@ -86,7 +86,7 @@ void changeFirstCom(bool status){
 	firstCom = status;
 }
 
-void ReadFileContents(char *path){
+bool ReadFileContents(char *path){
 
     FILE *pFile = fopen(path, "r");
     if (pFile == NULL) {
@@ -266,9 +266,9 @@ static void RunCommand(char* command){
 			
 			strncpy(unitBuffer, command + (strlen(COM_CHANGEVOL) - 1), 3);
 			tempoHold = atoi(unitBuffer);
-			audioMixer_setbpm(tempoHold);
+			audioMixer_setBpm(tempoHold);
 			
-			tempoHold = audioMixer_getbpm();
+			tempoHold = audioMixer_getBpm();
 			sprintf(reply, "%d", atoi(tempoHold));
 
 			
@@ -289,7 +289,7 @@ static void RunCommand(char* command){
 			
 		//Grab tempo var and place in the reply	
 		case 8:
-			tempoHold = audioMixer_getbpm();
+			tempoHold = audioMixer_getBpm();
 			sprintf(reply, "%d", atoi(tempoHold));
 
 			
@@ -303,7 +303,7 @@ static void RunCommand(char* command){
 			
 		//Grab mode var and place in the reply	
 		case 10:
-			modeHold = audioMixer_getMode();
+			modeHold = audioMixer_getBeat();
 			if (modeHold == 0){
 				sprintf(reply, "Nothing");
 			}else if (modeHold == 1){
