@@ -19,11 +19,14 @@
 
 // Store data of a single wave file read into memory.
 // Space is dynamically allocated; must be freed correctly!
+
 typedef struct
 {
 	int numSamples;
 	short *pData;
 } wavedata_t;
+
+
 
 // Prototypes:
 snd_pcm_t *Audio_openDevice();
@@ -59,10 +62,17 @@ runCommand("config-pin p9_18 i2c");
 runCommand("config-pin p9_17 i2c");
 }
 
-void wavePlayer_play(char* path, float volume)
+void wavePlayer_play(/*void *arguments*/ char* path, float volume)
 {
+	
+/*
+	playData_t *args = (playData_t*)arguments;
+	char* path = args->inst1;
+	char* path2 = args->inst2;
+	float volume = *args->playVolume;
+*/
 	printf("Beginning play-back of %s\n", path);
-
+	
 
 	// Configure Output Device
 	snd_pcm_t *handle = Audio_openDevice();
@@ -70,8 +80,9 @@ void wavePlayer_play(char* path, float volume)
 
 	// Load wave file we want to play:
 	wavedata_t sampleFile;
+	
 	Audio_readWaveFileIntoMemory(path, &sampleFile);
-
+	
 	// Set Volume
 	Audio_setVolume(&sampleFile,volume);
 
@@ -79,12 +90,17 @@ void wavePlayer_play(char* path, float volume)
 	Audio_playFile(handle, &sampleFile);
 
 	// Cleanup, letting the music in buffer play out (drain), then close and free.
+
+	
 	snd_pcm_drain(handle);
 	snd_pcm_hw_free(handle);
 	snd_pcm_close(handle);
+	
 	free(sampleFile.pData);
 
 	printf("Done!\n");
+
+	//return NULL;
 }
 
 // Open the PCM audio output device and configure it.
@@ -191,4 +207,11 @@ void Audio_playFile(snd_pcm_t *handle, wavedata_t *pWaveData)
 	}
 	if (frames > 0 && frames < pWaveData->numSamples)
 		printf("Short write (expected %d, wrote %li)\n", pWaveData->numSamples, frames);
+}
+
+
+void wavePlayer_cleanup(snd_pcm_t *handle){
+	snd_pcm_drain(handle);
+	snd_pcm_hw_free(handle);
+	snd_pcm_close(handle);
 }
