@@ -236,7 +236,7 @@ void createBuffer(short *Buffer, long BufferSize){
             }
             if(!fullAudioPlayed){
                 printf("remenant audio saved to queue\n");
-               unlock();
+                unlock();
                 audioMixer_queueSound(soundBites[i].soundSamples,soundBites[i].location,soundBites[i].position);
                 lock();
             }
@@ -245,9 +245,11 @@ void createBuffer(short *Buffer, long BufferSize){
             soundBites[i].location = 0;
             soundBites[i].position = 0;
             soundBites[i].isFull = false;
-            unlock();
-            printf("unlocked\n");
+            
+            
         }
+        unlock();
+        printf("unlocked\n");
 
         //beatRestTime = 0; // or whatever the offset is
     }
