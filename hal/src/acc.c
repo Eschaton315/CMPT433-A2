@@ -8,6 +8,7 @@
 #include <string.h> 
 #include <pthread.h>
 #include <stdbool.h>
+#include <math.h>
 #include "hal/acc.h"
 
 #define I2CDRV_LINUX_BUS0 "/dev/i2c-0"
@@ -31,7 +32,7 @@ static unsigned char readI2cReg(int i2cFileDesc, unsigned char regAddr);
 static void *accListener();
 
 pthread_t accThread;
-static int accAddrHold;
+static int i2cFileDesc;
 static int val1;
 static int val2;
 static double x = -999999;
@@ -40,7 +41,7 @@ static double y = -999999;
 static double yPrev = -999999;
 static double z = -999999;
 static double zPrev = -999999;
-static unsigned char regVal[6];
+static char regVal[6];
 static bool statusPlayHiHat = false;
 static bool statusPlaySnare = false;
 static bool statusPlayBase = false;
@@ -169,18 +170,6 @@ static int initI2cBus(char* bus, int address)
 	return i2cFileDesc;
 }
 
-//write to register
-static void writeI2cReg(int i2cFileDesc, unsigned char regAddr, unsigned char value)
-{
-	unsigned char buff[2];
-	buff[0] = regAddr;
-	buff[1] = value;
-	int res = write(i2cFileDesc, buff, 2);
-	if (res != 2) {
-		perror("Unable to write i2c register");
-		exit(-1);
-	}
-}
 
 //read the register
 static unsigned char readI2cReg(int i2cFileDesc, unsigned char regAddr)
