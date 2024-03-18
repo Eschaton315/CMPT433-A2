@@ -31,11 +31,7 @@ typedef struct
 float volume = 0.8;
 int bpm = 120;
 
-//static int soundQueuePosition = 0;
-//static int bufferPosition = 0;
-//static int bufferOffset = 0;
 static int currentBeat = 0;
-//static int beatRestTime = 0;
 int beatNumber = 1;
 bool playerActive = true;
 bool queueFull = false;
@@ -48,7 +44,7 @@ static wavedata_t sampleFiles[NUM_BEATS];
 static playData_t soundBites[MAX_SOUND_BITE];
 snd_pcm_t *handle;
 
-
+//locks for thread synchronization
 static void lock(){
     pthread_mutex_lock(&soundMutex);
 }
@@ -62,14 +58,12 @@ void* playBeat();
 
 //TODO: make volume and bpm adjusters
 
+//initialize the mixer and call needed threads
 void audioMixer_init(){
     printf("bpm = %d\n",bpm);
     for(int i; i<MAX_SOUND_BITE;i++){
         soundBites[i].isFull = false;
     }
-    
-
-
     handle = Audio_openDevice();
     printf("device open\n");
     Audio_readWaveFileIntoMemory(HIHAT,&sampleFiles[0]);
@@ -77,21 +71,31 @@ void audioMixer_init(){
     Audio_readWaveFileIntoMemory(BASS,&sampleFiles[2]);
     printf("BASS numsample = %d\n",sampleFiles[2].numSamples);
     pthread_create(&beatThread,NULL,&audioMixer_selectBeat,NULL);
-    sleepForMs(10);
 
     unsigned long unusedBufferSize = 0;
 	snd_pcm_get_params(handle, &unusedBufferSize, &playbackBufferSize);
 	// ..allocate playback buffer:
-    //playbackBufferSize = 441000;
+    //playbackBufferSize = 44100;
 	playbackBuffer = malloc(playbackBufferSize * sizeof(*playbackBuffer));
-    printf("buffersize = %lu\n", playbackBufferSize);
+    //printf("buffersize = %lu\n", playbackBufferSize);
     pthread_create(&playThread,NULL,&playBeat,NULL);
 
     return;
 }
 
+void audioMixer_setVol(float newVol){
+    volume = newVol;
+    return;
+}
+
+void audioMixer_setbpm(int newBpm){
+    bpm = newBpm;
+    return;
+}
+
 void audioMixer_queueSound(wavedata_t* sample,int location,int position){
-    //make proper queue system
+
+    //queue audio soundbite;
     bool soundQueued = false;
     lock();
     for(int i=0 ;i < MAX_SOUND_BITE;i++){
@@ -112,7 +116,7 @@ void audioMixer_queueSound(wavedata_t* sample,int location,int position){
     if(!soundQueued){
         printf("ERROR SOUND NOT QUEUED\n");
     }else{
-        printf("queuesound success\n");
+        printf("queue sound success\n");
     }
 }
 
@@ -203,13 +207,7 @@ void createBuffer(short *Buffer, int BufferSize){
                 }
                 
             }
-            /*
-            if(!fullAudioPlayed){
-                
-            }
-            */
-            //free soundBites[i]
-            soundBites[i].soundSamples = NULL;
+            soundBites[i].soundSamples->pData = NULL;
             soundBites[i].location = 0;
             soundBites[i].position = 0;
             soundBites[i].isFull = false;

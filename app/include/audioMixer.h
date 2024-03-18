@@ -4,6 +4,10 @@
 
 void audioMixer_init();
 
+void audioMixer_setVol(float newVol);
+
+void audioMixer_setbpm(int newBpm);
+
 void audioMixer_cleanup();
 
 #endif
