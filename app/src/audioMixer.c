@@ -200,10 +200,10 @@ void audioMixer_selectSound(char* path){
         audioMixer_queueSound(&sampleFiles[2],0);  
     }
     if(strcmp(path,SNARE)==0){
-        audioMixer_queueSound(&sampleFiles[2],0);  
+        audioMixer_queueSound(&sampleFiles[1],0);  
     }
     if(strcmp(path,HIHAT)==0){
-        audioMixer_queueSound(&sampleFiles[2],0);  
+        audioMixer_queueSound(&sampleFiles[0],0);  
     }
 
 }
