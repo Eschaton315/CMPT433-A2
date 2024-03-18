@@ -59,19 +59,32 @@ $(document).ready(function() {
 	});	
 	$('#hat').click(function(){
 		sendPrimeCommand("hat");
-
+		socket.on('commandReply', function(result) {
+			//Can add utils here
+			
 		});
 	});	
 	$('#snare').click(function(){
 		sendPrimeCommand("snare");
-
+		socket.on('commandReply', function(result) {
+			//Can add utils here
+			
 		});
+		
 	});	
 	$('#base').click(function(){
 		sendPrimeCommand("base");
+		socket.on('commandReply', function(result) {
+			//Can add utils here
+			
+		});
 	});	
 	$('#stop').click(function(){
 		sendPrimeCommand("stop");
+		socket.on('commandReply', function(result) {
+			//Can add utils here
+			
+		});
 		displayError(true);		
 	});
 	

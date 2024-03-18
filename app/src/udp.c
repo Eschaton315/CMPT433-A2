@@ -37,6 +37,11 @@ static char reply[REPLY_MAX_SIZE];
 static char msgPrev[RECEIVED_MAX_SIZE];
 static bool firstCom = true;
 static char unitBuffer[REPLY_MAX_SIZE];
+static float volumeHold;
+static int tempoHold;
+static int beatNum;
+static char modeHold[REPLY_MAX_SIZE];
+
 
 
 //Function for listening to UDP packets
@@ -195,53 +200,70 @@ static void RunCommand(char* command){
 	switch (commandCode) {		
 		//Silence
 		case 1:
-						
+			beatNum = 0;
+			audioMixer_setBeat(beatNum);
+			sprintf(reply, "nothing");
+			
 			break;
 		
 		//Rock
 		case 2:
+			beatNum = 1;
+			audioMixer_setBeat(beatNum);
+			sprintf(reply, "rock");
 			
 			break;
 			
 		//Custom Beat
 		case 3:
-			
+			beatNum = 2;
+			audioMixer_setBeat(beatNum);
+			sprintf(reply, "custom");
 			break;
 			
 		//Change Volume
 		case 4: ;
-			
-			strncpy(unitBuffer, command + (strlen(COM_CHANGEVOL) - 1), 3);
-			
 			//run atof() to convert unitBuffer to volume and use
 			
+			strncpy(unitBuffer, command + (strlen(COM_CHANGEVOL) - 1), 3);
+			volumeHold = atof(unitBuffer);
+			audioMixer_setVol(volumeHold);
+			
+			volumeHold = audioMixer_getVol();
+			sprintf(reply, "%d", atoi(volumeHold));
 			
 			break;
 			
 		//Change Tempo
 		case 5: ;
+			//run atoi() to convert unitBuffer to int and use
 			
 			strncpy(unitBuffer, command + (strlen(COM_CHANGEVOL) - 1), 3);
+			tempoHold = atoi(unitBuffer);
+			audioMixer_setbpm(tempoHold);
 			
-			//run atoi() to convert unitBuffer to int and use
+			TempoHold = audioMixer_getbpm();
+			sprintf(reply, "%d", atoi(volumeHold));
 			
 			break;
 			
 		//STOP
 		case 6:
 			changeTerminateStatus(true);
-			
+			sprintf(reply, "termination successful");
 			break;
 			
 		//Grab volume var and place in the reply	
 		case 7:
-			
+			volumeHold = audioMixer_getVol();
+			sprintf(reply, "%d", atoi(volumeHold));
 			
 			break;	
 			
 		//Grab tempo var and place in the reply	
 		case 8:
-			
+			TempoHold = audioMixer_getbpm();
+			sprintf(reply, "%d", atoi(volumeHold));
 			
 			break;
 		
@@ -253,25 +275,29 @@ static void RunCommand(char* command){
 			
 		//Grab mode var and place in the reply	
 		case 10:
-			
+			modeHold = audioMixer_getMode();
+			strncat(reply, modeHold, strlen(modeHold));
 			
 			break;
 		
 		//Play Hi-Hat	
 		case 11:
 			
+			sprintf(reply, "Hi-Hat played");
 			
 			break;
 		
 		//Play Snare	
 		case 12:
 			
+			sprintf(reply, "Snare played");
 			
 			break;
 			
 		//Play Base	
 		case 13:
 			
+			sprintf(reply, "Base played");
 			
 			break;
 	}
