@@ -10,6 +10,7 @@
 #include "udp.h"
 #include "timer.h" 
 #include "terminate.h"
+#include "periodTimer.h"
 
 
 #define BASE_BPM 120

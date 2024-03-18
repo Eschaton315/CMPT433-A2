@@ -125,21 +125,21 @@ void playSounds(){
 bool playHiHat(){
 	statusHold = statusPlayHiHat;
 	statusPlayHiHat = false;
-	return statusPlayHiHat;
+	return statusHold;
 	
 }
 
 bool playSnare(){
 	statusHold = statusPlayHiHat;
 	statusPlaySnare = false;
-	return statusPlaySnare;
+	return statusHold;
 	
 }
 
 bool playBase(){
 	statusHold = statusPlayHiHat;
 	statusPlayBase = false;
-	return statusPlayBase;
+	return statusHold;
 	
 }
 
