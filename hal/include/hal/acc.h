@@ -25,4 +25,8 @@ bool playSnare();
 //Check if base should be played
 bool playBase();
 
+//convert unsigned char to int
+unsigned int convertToUnsignedInt(unsigned char *array, int size);
+
+
 #endif
