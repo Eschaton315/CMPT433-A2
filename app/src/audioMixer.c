@@ -6,6 +6,7 @@
 #include <alsa/asoundlib.h>
 
 #include "timer.h"
+#include "periodTimer.h"
 #include "hal/wavePlayer.h"
 #include "hal/joyStick.h" 
 #include "timer.h"
@@ -80,6 +81,7 @@ void* playBeat();
 
 //initialize the mixer and call needed threads
 void audioMixer_init(){
+    
     printf("bpm = %d\n",bpm);
     for(int i; i<MAX_SOUND_BITE;i++){
         soundBites[i].isFull = false;
@@ -263,8 +265,10 @@ void* playBeat(){
     
         while(playerActive){
            // printf("creating buffer\n");
+            Period_markEvent(PERIOD_EVENT_BUFFER);
             minTime = getTimeInMs()-baseTime; 
             createBuffer();
+            Period_markEvent(PERIOD_EVENT_BUFFER);
             maxTime = getTimeInMs()-baseTime; 
             wavedata_t bufferSample = {.pData = playbackBuffer,.numSamples = playbackBufferSize};
             Audio_setVolume(&bufferSample,volume);
