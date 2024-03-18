@@ -8,6 +8,8 @@ void audioMixer_setVol(float newVol);
 
 void audioMixer_setbpm(int newBpm);
 
+void audioMixer_setBeat(int newBeatNum);
+
 void audioMixer_cleanup();
 
 #endif
