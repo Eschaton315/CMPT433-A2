@@ -28,6 +28,7 @@
 static int initI2cBus(char* bus, int address);
 static void writeI2cReg(int i2cFileDesc, unsigned char regAddr, unsigned char value);
 static unsigned char readI2cReg(int i2cFileDesc, unsigned char regAddr);
+static void *accListener();
 
 pthread_t accThread;
 static int accAddrHold;
@@ -44,26 +45,27 @@ static bool statusPlayHiHat = false;
 static bool statusPlaySnare = false;
 static bool statusPlayBase = false;
 static bool statusHold;
+static bool EndListen = false;
 
 //Initialize the accelerometer
 void acc_init(){
-    accAddrHold = initI2cBus(I2CDRV_LINUX_BUS1, I2C_DEVICE_ADDRESS);
+    i2cFileDesc = initI2cBus(I2CDRV_LINUX_BUS1, I2C_DEVICE_ADDRESS);
     pthread_create(&accThread, NULL, &accListener,NULL);
     return;
 }
 
 //Clean up the accelerometer
 void accListener_cleanup(){
-    stopListen = true;
+    EndListen = true;
 	close(i2cFileDesc);
-    pthread_join(joystickThread,NULL);
+    pthread_join(accThread,NULL);
 
     return;
 }
 
 //runs the accelerometer
 static void *accListener(){
-	while(!stopListen){
+	while(!EndListen){
 		regVal = readI2cReg(i2cFileDesc, REG_X0);
 		val1 = atoi(regVal);
 		regVal = readI2cReg(i2cFileDesc, REG_X1);
@@ -190,11 +192,11 @@ static unsigned char readI2cReg(int i2cFileDesc, unsigned char regAddr)
 	}
 
 	// Now read the value and return it
-	char value = 0;
-	res = read(i2cFileDesc, &value, sizeof(value));
-	if (res != sizeof(value)) {
-		perror("Unable to read i2c register");
-		exit(-1);
+	unsigned char buff[6];
+    res = read(i2cFileDesc, &buff, 6*sizeof(unsigned char));
+    if (res != sizeof(buff)) {
+        perror("I2C: Unable to read from i2c register");
+        exit(-1);
 	}
-	return value;
+	return buff;
 }
