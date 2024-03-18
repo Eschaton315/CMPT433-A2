@@ -257,7 +257,7 @@ static void RunCommand(char* command){
 		//Grab volume var and place in the reply	
 		case 7:
 			volumeHold = audioMixer_getVol();
-			sprintf(reply, "%f", atof(volumeHold));
+			sprintf(reply, "%f", volumeHold);
 			
 			break;	
 			
