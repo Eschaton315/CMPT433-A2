@@ -13,50 +13,43 @@ $(document).ready(function() {
 	$('#modeNone').click(function(){
 		sendPrimeCommand("silence");
 		socket.on('commandReply', function(result) {
-			var newDiv = $('<div></div>').text(result);
-			$('#modeid').replaceWith(newDiv);
+
 		});
 	});
 	$('#modeRock1').click(function(){
 		sendPrimeCommand("rock");
 		socket.on('commandReply', function(result) {
-			var newDiv = $('<div></div>').text(result);
-			$('#modeid').replaceWith(newDiv);
+
 		});
 	});
 	$('#customBeat').click(function(){
 		sendPrimeCommand("custombeat");
 		socket.on('commandReply', function(result) {
-			var newDiv = $('<div></div>').text(result);
-			$('#modeid').replaceWith(newDiv);
+
 		});
 	});
 	$('#volumeDown').click(function(){
 		decreaseVolume();
 		socket.on('commandReply', function(result) {
-			var newDiv = $('<div></div>').text(result);
-			$('#volumeid').replaceWith(newDiv);
+
 		});
 	});
 	$('#volumeUp').click(function(){
 		increaseVolume();
 		socket.on('commandReply', function(result) {
-			var newDiv = $('<div></div>').text(result);
-			$('#volumeid').replaceWith(newDiv);
+
 		});
 	});
 	$('#tempoDown').click(function(){
 		decreaseTempo();
 		socket.on('commandReply', function(result) {
-			var newDiv = $('<div></div>').text(result);
-			$('#tempoid').replaceWith(newDiv);
+
 		});
 	});
 	$('#tempoUp').click(function(){
 		increaseTempo();
 		socket.on('commandReply', function(result) {
-			var newDiv = $('<div></div>').text(result);
-			$('#tempoid').replaceWith(newDiv);
+
 		});
 	});	
 	$('#hat').click(function(){
