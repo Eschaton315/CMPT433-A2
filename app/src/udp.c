@@ -244,6 +244,7 @@ static void RunCommand(char* command){
 			
 			tempoHold = audioMixer_getbpm();
 			sprintf(reply, "%d", atoi(tempoHold));
+
 			
 			break;
 			
@@ -264,6 +265,7 @@ static void RunCommand(char* command){
 		case 8:
 			tempoHold = audioMixer_getbpm();
 			sprintf(reply, "%d", atoi(tempoHold));
+
 			
 			break;
 		
