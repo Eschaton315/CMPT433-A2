@@ -28,7 +28,7 @@
 
 static int initI2cBus(char* bus, int address);
 static void writeI2cReg(int i2cFileDesc, unsigned char regAddr, unsigned char value);
-static unsigned char readI2cReg(int i2cFileDesc, unsigned char regAddr);
+static int readI2cReg(int i2cFileDesc, unsigned char regAddr);
 static void *accListener();
 
 pthread_t accThread;
@@ -173,7 +173,7 @@ static int initI2cBus(char* bus, int address)
 
 
 //read the register
-static unsigned char readI2cReg(int i2cFileDesc, unsigned char regAddr)
+static int readI2cReg(int i2cFileDesc, unsigned char regAddr)
 {
 	// To read a register, must first write the address
 	int res = write(i2cFileDesc, &regAddr, sizeof(regAddr));
